@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  Platform,
 } from 'react-native';
 import { Database } from '../../types/database';
 
@@ -22,18 +23,21 @@ interface PaymentSheetProps {
 
 const STRIPE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
 
-// Check if Stripe is available (not available in Expo Go)
+// Check if Stripe is available (not available in Expo Go or Web)
 let StripeProvider: any = null;
 let useStripe: any = null;
 let isStripeAvailable = false;
 
-try {
-  const stripe = require('@stripe/stripe-react-native');
-  StripeProvider = stripe.StripeProvider;
-  useStripe = stripe.useStripe;
-  isStripeAvailable = true;
-} catch (error) {
-  console.log('Stripe native module not available. This is expected in Expo Go.');
+// Only try to load Stripe on native platforms (not web)
+if (Platform.OS !== 'web') {
+  try {
+    const stripe = require('@stripe/stripe-react-native');
+    StripeProvider = stripe.StripeProvider;
+    useStripe = stripe.useStripe;
+    isStripeAvailable = true;
+  } catch (error) {
+    console.log('Stripe native module not available. This is expected in Expo Go.');
+  }
 }
 
 function PaymentSheetContent({ visible, event, userId, onClose, onSuccess }: PaymentSheetProps) {
@@ -49,9 +53,13 @@ function PaymentSheetContent({ visible, event, userId, onClose, onSuccess }: Pay
 
     // Check if Stripe is available
     if (!isStripeAvailable || !initPaymentSheet || !presentPaymentSheet) {
+      const message = Platform.OS === 'web'
+        ? 'Stripe payments are not available on web. Please use the mobile app to complete payments.\n\nFor now, this is a demo of the payment flow.'
+        : 'Stripe payments are not available in Expo Go. To test payments:\n\n1. Build a development client: npx expo run:ios\n2. Or test in production build\n\nFor now, this is a demo of the payment flow.';
+      
       Alert.alert(
-        'Development Mode',
-        'Stripe payments are not available in Expo Go. To test payments:\n\n1. Build a development client: npx expo run:ios\n2. Or test in production build\n\nFor now, this is a demo of the payment flow.',
+        Platform.OS === 'web' ? 'Web Payment' : 'Development Mode',
+        message,
         [{ text: 'OK', onPress: onClose }]
       );
       return;
