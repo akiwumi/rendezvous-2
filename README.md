@@ -1,10 +1,12 @@
-# Rendezvous Social Club - Mobile App
+# Rendezvous Social Club - Mobile & Web App
 
-An invite-only social club mobile application for Mallorca, built with React Native, Expo, and Supabase.
+An invite-only social club application for Mallorca, built with React Native, Expo, and Supabase.
+
+**Available on:** 📱 iOS • 🤖 Android • 🌐 Web
 
 ## 🎉 Current Status: **100% Complete - Production Ready!**
 
-**All 17 major features** are fully implemented and ready for production deployment!
+**All 17 major features** are fully implemented and ready for production deployment on mobile and web!
 
 ### ✅ What's Working Now
 - ✅ Complete authentication flow (Login, Register, Terms)
@@ -71,9 +73,35 @@ npx expo start
 
 ### Running the App
 
-- **iOS Simulator:** Press `i` in the terminal
-- **Android Emulator:** Press `a` in the terminal
-- **Physical Device:** Scan the QR code with Expo Go app
+#### Mobile (iOS/Android)
+```bash
+# Start Expo
+npx expo start
+
+# Then:
+# - iOS Simulator: Press 'i' in the terminal
+# - Android Emulator: Press 'a' in the terminal
+# - Physical Device: Scan the QR code with Expo Go app
+```
+
+#### Web 🌐
+```bash
+# Start web version
+npx expo start --web
+
+# Or add to package.json scripts:
+npm run web
+
+# Opens automatically at http://localhost:8081
+```
+
+**Web-Specific Features:**
+- ✅ Full authentication (login/register)
+- ✅ All screens and navigation work
+- ✅ Browser localStorage for sessions (no AsyncStorage needed)
+- ✅ HTML file input for image uploads
+- ⚠️ Payments show fallback UI (use mobile for actual Stripe payments)
+- 🎨 Responsive design adapts to desktop/tablet/mobile screens
 
 ## 📱 Features
 
