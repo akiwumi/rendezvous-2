@@ -62,8 +62,7 @@ export default function EventsScreen() {
     <TouchableOpacity
       style={styles.eventCard}
       onPress={() => {
-        // TODO: Navigate to EventDetailScreen
-        console.log('Navigate to event:', item.id);
+        navigation.navigate('EventDetail', { eventId: item.id });
       }}
     >
       {item.cover_image_url && (
