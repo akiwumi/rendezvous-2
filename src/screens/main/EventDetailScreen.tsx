@@ -14,6 +14,7 @@ import { useAuth } from '../../lib/hooks/useAuth';
 import { Database } from '../../types/database';
 import { format } from 'date-fns';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import PaymentSheet from '../../components/events/PaymentSheet';
 
 type Event = Database['public']['Tables']['events']['Row'];
 type RSVP = Database['public']['Tables']['event_rsvps']['Row'];
@@ -27,6 +28,7 @@ export default function EventDetailScreen({ route, navigation }: Props) {
   const [rsvp, setRsvp] = useState<RSVP | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
+  const [showPaymentSheet, setShowPaymentSheet] = useState(false);
 
   useEffect(() => {
     fetchEventDetails();
@@ -68,24 +70,17 @@ export default function EventDetailScreen({ route, navigation }: Props) {
 
     // Check if paid event and user wants to attend
     if (event.price_eur > 0 && status === 'attending_confirmed') {
-      Alert.alert(
-        'Payment Required',
-        `This event costs €${event.price_eur.toFixed(2)}. Payment integration coming soon!`,
-        [
-          { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Continue',
-            onPress: () => createOrUpdateRSVP(status),
-          },
-        ]
-      );
+      // Create pending RSVP first
+      await createOrUpdateRSVP('attending_pending_payment');
+      // Show payment sheet
+      setShowPaymentSheet(true);
       return;
     }
 
     createOrUpdateRSVP(status);
   };
 
-  const createOrUpdateRSVP = async (status: 'interested' | 'attending_confirmed') => {
+  const createOrUpdateRSVP = async (status: 'interested' | 'attending_confirmed' | 'attending_pending_payment') => {
     if (!user) return;
 
     setActionLoading(true);
@@ -97,7 +92,7 @@ export default function EventDetailScreen({ route, navigation }: Props) {
           user_id: user.id,
           status,
           requires_payment: event!.price_eur > 0,
-          payment_completed: event!.price_eur === 0,
+          payment_completed: event!.price_eur === 0 || status === 'attending_confirmed',
         })
         .select()
         .single();
@@ -111,11 +106,9 @@ export default function EventDetailScreen({ route, navigation }: Props) {
         // TODO: Call Edge Function to notify friends
         Alert.alert(
           'Success!',
-          event!.price_eur === 0
-            ? 'You are confirmed for this event!'
-            : 'RSVP saved! Complete payment to confirm attendance.'
+          'You are confirmed for this event!'
         );
-      } else {
+      } else if (status === 'interested') {
         Alert.alert('Success!', 'You are now interested in this event!');
       }
 
@@ -126,6 +119,11 @@ export default function EventDetailScreen({ route, navigation }: Props) {
     } finally {
       setActionLoading(false);
     }
+  };
+
+  const handlePaymentSuccess = () => {
+    // Refresh event details to show updated RSVP status
+    fetchEventDetails();
   };
 
   const cancelRSVP = async () => {
@@ -345,6 +343,17 @@ export default function EventDetailScreen({ route, navigation }: Props) {
           )}
         </View>
       </View>
+
+      {/* Payment Sheet */}
+      {event && user && (
+        <PaymentSheet
+          visible={showPaymentSheet}
+          event={event}
+          userId={user.id}
+          onClose={() => setShowPaymentSheet(false)}
+          onSuccess={handlePaymentSuccess}
+        />
+      )}
     </ScrollView>
   );
 }

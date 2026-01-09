@@ -185,6 +185,15 @@ export default function ProfileScreen() {
         </View>
 
         {/* Action Buttons */}
+        {profile.role === 'admin' && (
+          <TouchableOpacity 
+            style={styles.adminButton}
+            onPress={() => navigation.navigate('AdminDashboard' as never)}
+          >
+            <Text style={styles.adminButtonText}>⚙️ Admin Dashboard</Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity style={styles.editButton}>
           <Text style={styles.editButtonText}>Edit Profile</Text>
         </TouchableOpacity>
@@ -308,6 +317,20 @@ const styles = StyleSheet.create({
     width: 1,
     height: 40,
     backgroundColor: '#eee',
+  },
+  adminButton: {
+    backgroundColor: '#FF9500',
+    paddingHorizontal: 48,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+    width: '100%',
+    alignItems: 'center',
+  },
+  adminButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
   },
   editButton: {
     backgroundColor: '#007AFF',

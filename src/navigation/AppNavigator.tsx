@@ -11,6 +11,7 @@ import FriendsScreen from '../screens/main/FriendsScreen';
 import SearchScreen from '../screens/main/SearchScreen';
 import GalleryScreen from '../screens/main/GalleryScreen';
 import ChatScreen from '../screens/main/ChatScreen';
+import AdminDashboardScreen from '../screens/admin/AdminDashboardScreen';
 import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
 import { useProfile } from '../lib/hooks/useProfile';
 import { useAuth } from '../lib/hooks/useAuth';
@@ -105,6 +106,14 @@ export function AppNavigator() {
             component={ChatScreen}
             options={{ 
               title: 'Chat with Admin',
+              headerBackTitle: 'Back'
+            }}
+          />
+          <Stack.Screen 
+            name="AdminDashboard" 
+            component={AdminDashboardScreen}
+            options={{ 
+              title: 'Admin Dashboard',
               headerBackTitle: 'Back'
             }}
           />
