@@ -16,11 +16,11 @@ Create a `.env` file in the project root with the following:
 
 ```env
 # Supabase Configuration
-EXPO_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-EXPO_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key-here
+EXPO_PUBLIC_SUPABASE_URL=https://zucghuijhrzkqcnxaahu.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_5wFK9wrex81ROYBg6eDLgQ_W54WiUgH
 
 # Stripe Configuration
-EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your-stripe-publishable-key-here
+EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_51SnVvA7xer0EMHdciPpZieHccOXVdfJsvJ3h0k4uuAbwzm9iMQM34ixUgtt1cSE0mWPi19BWoOHXqmU27W7woG3F001dG3cyE4
 ```
 
 **Where to get these values:**

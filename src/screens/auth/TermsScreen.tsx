@@ -26,7 +26,14 @@ export default function TermsScreen({ route, navigation }: Props) {
 
     // Check if Supabase is configured
     const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-    if (!supabaseUrl || supabaseUrl === 'https://placeholder.supabase.co') {
+    const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+    
+    console.log('Supabase URL:', supabaseUrl);
+    console.log('Supabase Key exists:', !!supabaseKey);
+
+    if (!supabaseUrl || !supabaseKey || 
+        supabaseUrl === 'https://placeholder.supabase.co' || 
+        supabaseKey === 'placeholder-key') {
       Alert.alert(
         'Backend Not Configured',
         'Supabase backend is not set up yet.\n\n' +
@@ -41,12 +48,23 @@ export default function TermsScreen({ route, navigation }: Props) {
     }
 
     setLoading(true);
+    
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Request timeout - please check your internet connection')), 10000)
+    );
+
     try {
-      // 1. Create auth user
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      // 1. Create auth user with timeout
+      const signUpPromise = supabase.auth.signUp({
         email,
         password,
       });
+
+      const { data: authData, error: authError } = await Promise.race([
+        signUpPromise,
+        timeoutPromise
+      ]) as any;
 
       if (authError) throw authError;
       if (!authData.user) throw new Error('No user returned');
@@ -72,6 +90,7 @@ export default function TermsScreen({ route, navigation }: Props) {
       if (termsError) throw termsError;
 
       // Success - user will be redirected to onboarding by App.tsx
+      console.log('Registration successful!');
     } catch (error: any) {
       console.error('Registration error:', error);
       Alert.alert(
