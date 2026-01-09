@@ -2,9 +2,24 @@
 
 An invite-only social club mobile application for Mallorca, built with React Native, Expo, and Supabase.
 
-## 📖 Documentation
+## 🎉 Current Status: **62.5% Complete - Functional MVP!**
 
-**Complete technical specification:** [docs/CONTEXT.md](./docs/CONTEXT.md) (5,300+ lines)
+**10 out of 16** major features are fully implemented and ready for testing!
+
+### ✅ What's Working Now
+- Complete authentication flow (Login, Register, Terms)
+- Onboarding with mandatory profile picture upload
+- Admin newsfeed with real-time updates
+- Events browsing with search
+- User profiles with hero image management
+- Calendar showing confirmed attending events
+- Supabase integration throughout
+
+### 📋 Documentation
+
+**Complete technical specification:** [docs/CONTEXT.md](./docs/CONTEXT.md) (5,336 lines)  
+**Implementation guide:** [BUILD_GUIDE.md](./BUILD_GUIDE.md) (771 lines)  
+**Development progress:** [PROGRESS.md](./PROGRESS.md) - Detailed status report
 
 The comprehensive specification includes:
 - Complete database schema (17 tables)
@@ -14,8 +29,6 @@ The comprehensive specification includes:
 - Detailed UI/UX flows
 - Security & compliance guidelines
 - Implementation guidelines
-
-**Note:** The specification was originally written for web (Next.js) but the database schema, API, and business logic apply to this mobile app as well.
 
 ## 🚀 Quick Start
 
@@ -84,21 +97,27 @@ npx expo build:android
 - **State:** React Query + Context API
 - **UI:** React Native components + custom design system
 
-## 📱 Key Features
+## 📱 Features Status
 
-- ✅ Invite-only registration with code validation
-- ✅ Mandatory Terms & Conditions acceptance
-- ✅ Profile system with mandatory avatar & optional hero images
-- ✅ Event browsing, RSVP, and ticketing (free & paid)
-- ✅ Friends system with activity notifications
-- ✅ Push notifications (iOS & Android)
-- ✅ Event ratings (post-event)
-- ✅ Admin panel (via web or mobile)
-- ✅ Member-to-admin chat
-- ✅ Calendar with reminders
-- ✅ Admin-curated club gallery
-- ✅ Image upload & compression
-- ✅ Offline support with async storage
+### ✅ Implemented (10/16 - 62.5%)
+- ✅ **Authentication** - Login, Registration, Terms acceptance
+- ✅ **Onboarding** - Mandatory profile picture upload
+- ✅ **Navigation** - Auth flow, onboarding gate, bottom tabs
+- ✅ **Newsfeed** - Admin posts with real-time updates
+- ✅ **Events** - Browse, search, and view events
+- ✅ **Profile** - User profiles with hero image management
+- ✅ **Calendar** - View confirmed attending events
+- ✅ **Supabase Integration** - All screens connected to backend
+- ✅ **Image Upload** - Profile avatars and hero images
+- ✅ **Real-time Updates** - Live post and event updates
+
+### 🚧 Remaining Features (6/16)
+- ⏳ Friends System
+- ⏳ Notifications Panel
+- ⏳ Event RSVP & Payments (Stripe)
+- ⏳ Member-Admin Chat
+- ⏳ Club Gallery
+- ⏳ Admin Panel
 
 ## 📁 Project Structure
 
