@@ -7,6 +7,10 @@ import EventDetailScreen from '../screens/main/EventDetailScreen';
 import CalendarScreen from '../screens/main/CalendarScreen';
 import ProfileScreen from '../screens/main/ProfileScreen';
 import NotificationsScreen from '../screens/main/NotificationsScreen';
+import FriendsScreen from '../screens/main/FriendsScreen';
+import SearchScreen from '../screens/main/SearchScreen';
+import GalleryScreen from '../screens/main/GalleryScreen';
+import ChatScreen from '../screens/main/ChatScreen';
 import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
 import { useProfile } from '../lib/hooks/useProfile';
 import { useAuth } from '../lib/hooks/useAuth';
@@ -35,9 +39,19 @@ function MainTabs() {
         options={{ title: 'Events' }}
       />
       <Tab.Screen 
-        name="Notifications" 
-        component={NotificationsScreen}
-        options={{ title: 'Notifications' }}
+        name="Search" 
+        component={SearchScreen}
+        options={{ title: 'Search' }}
+      />
+      <Tab.Screen 
+        name="Friends" 
+        component={FriendsScreen}
+        options={{ title: 'Friends' }}
+      />
+      <Tab.Screen 
+        name="Gallery" 
+        component={GalleryScreen}
+        options={{ title: 'Gallery' }}
       />
       <Tab.Screen 
         name="Profile" 
@@ -83,6 +97,14 @@ export function AppNavigator() {
             component={EventDetailScreen}
             options={{ 
               title: 'Event Details',
+              headerBackTitle: 'Back'
+            }}
+          />
+          <Stack.Screen 
+            name="Chat" 
+            component={ChatScreen}
+            options={{ 
+              title: 'Chat with Admin',
               headerBackTitle: 'Back'
             }}
           />

@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../../lib/supabase/client';
 import { useAuth } from '../../lib/hooks/useAuth';
 import { useProfile } from '../../lib/hooks/useProfile';
@@ -17,6 +18,7 @@ import * as ImagePicker from 'expo-image-picker';
 const DEFAULT_HERO_URL = 'https://images.unsplash.com/photo-1495954484750-af469f2f9be5?w=1200&h=400&fit=crop'; // Mallorca sunset
 
 export default function ProfileScreen() {
+  const navigation = useNavigation();
   const { user, signOut } = useAuth();
   const { profile, loading } = useProfile(user?.id);
   const [uploading, setUploading] = useState(false);
@@ -187,6 +189,13 @@ export default function ProfileScreen() {
           <Text style={styles.editButtonText}>Edit Profile</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity 
+          style={styles.chatButton}
+          onPress={() => navigation.navigate('Chat' as never)}
+        >
+          <Text style={styles.chatButtonText}>💬 Contact Admin</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.settingsButton}>
           <Text style={styles.settingsButtonText}>Settings</Text>
         </TouchableOpacity>
@@ -310,6 +319,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   editButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  chatButton: {
+    backgroundColor: '#34C759',
+    paddingHorizontal: 48,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+    width: '100%',
+    alignItems: 'center',
+  },
+  chatButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
