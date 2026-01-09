@@ -38,9 +38,34 @@ export default function OnboardingScreen() {
     }
   };
 
+  const skipOnboarding = async () => {
+    if (!user) return;
+
+    setUploading(true);
+    try {
+      // Mark onboarding as completed without photo
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          onboarding_completed: true,
+        })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      // Navigation will be handled automatically by AppNavigator
+    } catch (error: any) {
+      Alert.alert('Error', error.message);
+      setUploading(false);
+    }
+  };
+
   const uploadAndContinue = async () => {
-    if (!imageUri || !user) {
-      Alert.alert('Error', 'Please select a profile picture');
+    if (!user) return;
+
+    // If no image selected, just skip
+    if (!imageUri) {
+      await skipOnboarding();
       return;
     }
 
@@ -90,7 +115,7 @@ export default function OnboardingScreen() {
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>Welcome!</Text>
-        <Text style={styles.subtitle}>Upload your profile picture to continue</Text>
+        <Text style={styles.subtitle}>Add a profile picture (optional)</Text>
 
         <TouchableOpacity style={styles.avatarContainer} onPress={pickImage}>
           {imageUri ? (
@@ -110,19 +135,31 @@ export default function OnboardingScreen() {
         )}
 
         <TouchableOpacity
-          style={[styles.button, (!imageUri || uploading) && styles.buttonDisabled]}
+          style={[styles.button, uploading && styles.buttonDisabled]}
           onPress={uploadAndContinue}
-          disabled={!imageUri || uploading}
+          disabled={uploading}
         >
           {uploading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>Continue</Text>
+            <Text style={styles.buttonText}>
+              {imageUri ? 'Upload & Continue' : 'Continue'}
+            </Text>
           )}
         </TouchableOpacity>
 
+        {!imageUri && (
+          <TouchableOpacity
+            style={styles.skipButton}
+            onPress={skipOnboarding}
+            disabled={uploading}
+          >
+            <Text style={styles.skipButtonText}>Skip for now</Text>
+          </TouchableOpacity>
+        )}
+
         <Text style={styles.note}>
-          Your profile picture is required and will be visible to all members.
+          You can add a profile picture later from your profile settings.
         </Text>
       </View>
     </View>
@@ -201,6 +238,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  skipButton: {
+    marginTop: 16,
+    paddingVertical: 12,
+  },
+  skipButtonText: {
+    color: '#666',
+    fontSize: 16,
   },
   note: {
     fontSize: 12,
