@@ -8,8 +8,6 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { StripeProvider, useStripe } from '@stripe/stripe-react-native';
-import { createPaymentIntent, confirmPayment } from '../../lib/stripe/client';
 import { Database } from '../../types/database';
 
 type Event = Database['public']['Tables']['events']['Row'];
@@ -24,8 +22,23 @@ interface PaymentSheetProps {
 
 const STRIPE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
 
+// Check if Stripe is available (not available in Expo Go)
+let StripeProvider: any = null;
+let useStripe: any = null;
+let isStripeAvailable = false;
+
+try {
+  const stripe = require('@stripe/stripe-react-native');
+  StripeProvider = stripe.StripeProvider;
+  useStripe = stripe.useStripe;
+  isStripeAvailable = true;
+} catch (error) {
+  console.log('Stripe native module not available. This is expected in Expo Go.');
+}
+
 function PaymentSheetContent({ visible, event, userId, onClose, onSuccess }: PaymentSheetProps) {
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const stripe = isStripeAvailable ? useStripe() : { initPaymentSheet: null, presentPaymentSheet: null };
+  const { initPaymentSheet, presentPaymentSheet } = stripe;
   const [loading, setLoading] = useState(false);
 
   const handlePayment = async () => {
@@ -34,8 +47,20 @@ function PaymentSheetContent({ visible, event, userId, onClose, onSuccess }: Pay
       return;
     }
 
+    // Check if Stripe is available
+    if (!isStripeAvailable || !initPaymentSheet || !presentPaymentSheet) {
+      Alert.alert(
+        'Development Mode',
+        'Stripe payments are not available in Expo Go. To test payments:\n\n1. Build a development client: npx expo run:ios\n2. Or test in production build\n\nFor now, this is a demo of the payment flow.',
+        [{ text: 'OK', onPress: onClose }]
+      );
+      return;
+    }
+
     setLoading(true);
     try {
+      // Dynamic import for createPaymentIntent and confirmPayment
+      const { createPaymentIntent, confirmPayment } = require('../../lib/stripe/client');
       // Create payment intent
       const { clientSecret, paymentIntentId } = await createPaymentIntent(
         event.id,
@@ -155,8 +180,12 @@ function PaymentSheetContent({ visible, event, userId, onClose, onSuccess }: Pay
 
 export default function PaymentSheet(props: PaymentSheetProps) {
   if (!STRIPE_PUBLISHABLE_KEY) {
-    console.error('Stripe publishable key not set');
-    return null;
+    console.warn('Stripe publishable key not set');
+  }
+
+  // If Stripe is not available (Expo Go), render component without provider
+  if (!isStripeAvailable || !StripeProvider) {
+    return <PaymentSheetContent {...props} />;
   }
 
   return (
