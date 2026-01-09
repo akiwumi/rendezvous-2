@@ -24,6 +24,22 @@ export default function TermsScreen({ route, navigation }: Props) {
       return;
     }
 
+    // Check if Supabase is configured
+    const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+    if (!supabaseUrl || supabaseUrl === 'https://placeholder.supabase.co') {
+      Alert.alert(
+        'Backend Not Configured',
+        'Supabase backend is not set up yet.\n\n' +
+        'To enable registration:\n' +
+        '1. Create a Supabase project\n' +
+        '2. Add credentials to .env file\n' +
+        '3. Restart the app\n\n' +
+        'See SETUP.md for instructions.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
     setLoading(true);
     try {
       // 1. Create auth user
@@ -57,7 +73,12 @@ export default function TermsScreen({ route, navigation }: Props) {
 
       // Success - user will be redirected to onboarding by App.tsx
     } catch (error: any) {
-      Alert.alert('Registration Failed', error.message);
+      console.error('Registration error:', error);
+      Alert.alert(
+        'Registration Failed', 
+        error.message || 'An error occurred during registration. Please check your connection and try again.'
+      );
+    } finally {
       setLoading(false);
     }
   };

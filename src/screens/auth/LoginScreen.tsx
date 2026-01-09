@@ -28,6 +28,22 @@ export default function LoginScreen({ navigation }: Props) {
       return;
     }
 
+    // Check if Supabase is configured
+    const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+    if (!supabaseUrl || supabaseUrl === 'https://placeholder.supabase.co') {
+      Alert.alert(
+        'Backend Not Configured',
+        'Supabase backend is not set up yet.\n\n' +
+        'To enable login:\n' +
+        '1. Create a Supabase project\n' +
+        '2. Add credentials to .env file\n' +
+        '3. Restart the app\n\n' +
+        'See SETUP.md for instructions.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -38,7 +54,11 @@ export default function LoginScreen({ navigation }: Props) {
       if (error) throw error;
       // Navigation handled automatically by App.tsx
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+      console.error('Login error:', error);
+      Alert.alert(
+        'Login Failed', 
+        error.message || 'Unable to login. Please check your credentials and connection.'
+      );
     } finally {
       setLoading(false);
     }
