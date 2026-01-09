@@ -22,23 +22,20 @@ export default function RegisterScreen({ navigation }: Props) {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
-  const [inviteCode, setInviteCode] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleContinue = async () => {
-    if (!email || !password || !fullName || !username || !inviteCode) {
+    if (!email || !password || !fullName || !username) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
-    // TODO: Validate invite code via Edge Function
-    // For now, navigate to Terms screen
+    // Navigate to Terms screen
     navigation.navigate('Terms', {
       email,
       password,
       fullName,
       username,
-      inviteCode,
     });
   };
 
@@ -86,15 +83,6 @@ export default function RegisterScreen({ navigation }: Props) {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
-              editable={!loading}
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="Invite Code"
-              value={inviteCode}
-              onChangeText={setInviteCode}
-              autoCapitalize="characters"
               editable={!loading}
             />
 

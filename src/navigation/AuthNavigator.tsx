@@ -7,7 +7,7 @@ import TermsScreen from '../screens/auth/TermsScreen';
 export type AuthStackParamList = {
   Login: undefined;
   Register: undefined;
-  Terms: { email: string; password: string; fullName: string; username: string; inviteCode: string };
+  Terms: { email: string; password: string; fullName: string; username: string };
 };
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();

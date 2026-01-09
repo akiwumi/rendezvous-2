@@ -14,7 +14,7 @@ import type { AuthStackParamList } from '../../navigation/AuthNavigator';
 type Props = NativeStackScreenProps<AuthStackParamList, 'Terms'>;
 
 export default function TermsScreen({ route, navigation }: Props) {
-  const { email, password, fullName, username, inviteCode } = route.params;
+  const { email, password, fullName, username } = route.params;
   const [accepted, setAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -54,8 +54,6 @@ export default function TermsScreen({ route, navigation }: Props) {
       });
 
       if (termsError) throw termsError;
-
-      // 4. Update invite code usage (TODO: via Edge Function)
 
       // Success - user will be redirected to onboarding by App.tsx
     } catch (error: any) {
