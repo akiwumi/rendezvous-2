@@ -6,7 +6,13 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "setup:local": "./setup-local.sh",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset && psql postgresql://postgres:postgres@localhost:54322/postgres < supabase/seed.sql",
+    "db:studio": "open http://localhost:54323",
+    "dev:local": "supabase start && npm run web"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
